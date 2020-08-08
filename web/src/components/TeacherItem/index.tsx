@@ -3,35 +3,54 @@ import React from 'react';
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
 
 import './styles.css'
+import api from '../../services/api';
 
-function TeacherItem() {
+export interface Teacher {
+  id: number;
+  avatar: string;
+  bio: string;
+  cost: number;
+  name: string;
+  subject: string;
+  whatsapp: string;
+}
+
+interface TeacherItemProps {
+  teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+  function createNewConnection() {
+    api.post('connections', {
+      user_id: teacher.id
+    });
+  }
+  
   return (
     <article className="teacher-item">
-    <header>
-      <img src="https://avatars2.githubusercontent.com/u/2254731?s=460&u=0ba16a79456c2f250e7579cb388fa18c5c2d7d65&v=4" alt="Diego Fernandes"/>
-      <div>
-        <strong>Diego Fernades</strong>
-        <span>Química</span>
-      </div>
-    </header>
+      <header>
+        <img src={teacher.avatar} alt={teacher.name} />
+        <div>
+          <strong>{teacher.name}</strong>
+          <span>{teacher.subject}</span>
+        </div>
+      </header>
 
-    <p>
-      Entusiasta das melhores tecnologias de química avançada.
-      <br /><br />  
-      Apaixonado por explodir cosias em laboratório e por mudar a vida das pessoas através de experiências. Mais de 200.000 pessoas já passaram por uma das minhas explosões.
-    </p>
-
-    <footer>
       <p>
-        Preço/hora
-        <strong>R$ 80,00</strong>
+        {teacher.bio}
       </p>
-      <button type="button">
-        <img src={whatsappIcon} alt="Whatsapp"/>
+
+      <footer>
+        <p>
+          Preço/hora
+  <strong>R$ {teacher.cost}</strong>
+        </p>
+        <a target="_blank" onClick={createNewConnection} href={`https://wa.me/${teacher.whatsapp}`} type="button">
+          <img src={whatsappIcon} alt="Whatsapp" />
         Entrar em contato
-      </button>
-    </footer>
-  </article>
+      </a>
+      </footer>
+    </article>
   );
 }
 
